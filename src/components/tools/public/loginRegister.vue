@@ -1,39 +1,52 @@
 <template>
-	<div class="login-register">
-		<div class="contain">
-			<div class="big-box" :class="{active:isLogin}">
-				<div class="big-contain" v-if="isLogin">
-					<div class="btitle">账户登录</div>
-					<div class="bform">
-						<input type="email" placeholder="邮箱" v-model="form.useremail">
-						<span class="errTips" v-if="emailError">* 邮箱填写错误 *</span>
-						<input type="password" placeholder="密码" v-model="form.userpwd">
-						<span class="errTips" v-if="emailError">* 密码填写错误 *</span>
+	<div>
+		<div v-if="!this.$store.state.loginRegister.isLogin" class="login-register">
+			<div class="contain">
+				<div class="big-box" :class="{active:isLogin}">
+					<div class="big-contain" v-if="isLogin">
+						<div class="btitle">账户登录</div>
+						<div class="bform">
+							<input type="email" placeholder="邮箱" v-model="form.useremail" @keyup.enter="login">
+							<span class="errTips" v-if="emailError">* 邮箱填写错误 *</span>
+							<input type="password" placeholder="密码" v-model="form.userpwd" @keyup.enter="login">
+							<span class="errTips" v-if="emailError">* 密码填写错误 *</span>
+						</div>
+						<button class="bbutton" @click="login">登录</button>
 					</div>
-					<button class="bbutton" @click="login">登录</button>
+					<div class="big-contain" v-else>
+						<div class="btitle">创建账户</div>
+						<div class="bform">
+							<input type="text" placeholder="用户名" v-model="form.username" @keyup.enter="register">
+							<span class="errTips" v-if="existed">* 用户名已经存在！ *</span>
+							<input type="email" placeholder="邮箱" v-model="form.useremail" @keyup.enter="register">
+							<input type="password" placeholder="密码" v-model="form.userpwd" @keyup.enter="register">
+						</div>
+						<button class="bbutton" @click="register">注册</button>
+					</div>
 				</div>
-				<div class="big-contain" v-else>
-					<div class="btitle">创建账户</div>
-					<div class="bform">
-						<input type="text" placeholder="用户名" v-model="form.username">
-						<span class="errTips" v-if="existed">* 用户名已经存在！ *</span>
-						<input type="email" placeholder="邮箱" v-model="form.useremail">
-						<input type="password" placeholder="密码" v-model="form.userpwd">
+				<div class="small-box" :class="{active:isLogin}">
+					<div class="small-contain" v-if="isLogin">
+						<div class="stitle">你好，朋友!</div>
+						<p class="scontent">开始注册，和我们一起旅行</p>
+						<button class="sbutton" @click="changeType">注册</button>
 					</div>
-					<button class="bbutton" @click="register">注册</button>
+					<div class="small-contain" v-else>
+						<div class="stitle">欢迎回来!</div>
+						<p class="scontent">与我们保持联系，请登录你的账户</p>
+						<button class="sbutton" @click="changeType">登录</button>
+					</div>
 				</div>
 			</div>
-			<div class="small-box" :class="{active:isLogin}">
-				<div class="small-contain" v-if="isLogin">
-					<div class="stitle">你好，朋友!</div>
-					<p class="scontent">开始注册，和我们一起旅行</p>
-					<button class="sbutton" @click="changeType">注册</button>
-				</div>
-				<div class="small-contain" v-else>
-					<div class="stitle">欢迎回来!</div>
-					<p class="scontent">与我们保持联系，请登录你的账户</p>
-					<button class="sbutton" @click="changeType">登录</button>
-				</div>
+		</div>
+		<div v-if="this.$store.state.loginRegister.isLogin" class="user-info-wrapper">
+			<div class="user-info">
+				<div class="user-info-item"><span class="decoration">昵称</span><input type="text" v-model="userMessage.username" disabled></div>
+				<div class="user-info-item"><span class="decoration">真名</span><input type="text" v-model="userMessage.realname"></div>
+				<div class="user-info-item"><span class="decoration">性别</span><input type="text" v-model="userMessage.sex"></div>
+				<div class="user-info-item"><span class="decoration">地址</span><input type="text" v-model="userMessage.addr"></div>
+				<div class="user-info-item"><span class="decoration">身份证</span><input type="text" v-model="userMessage.identification"></div>
+				<div class="user-info-item"><span class="decoration">电话</span><input type="text" v-model="userMessage.phone"></div>
+				<button class="btn" @click="btnClick()">提交</button>
 			</div>
 		</div>
 	</div>
@@ -41,6 +54,7 @@
 
 <script>
 import { request } from "@/network/request.js";  // 网络请求相关
+
 	export default{
 		name:'login-register',
 		data(){
@@ -64,6 +78,24 @@ import { request } from "@/network/request.js";  // 网络请求相关
 				this.form.useremail = ''
 				this.form.userpwd = ''
 			},
+			btnClick() {
+				console.log('点击了提交');
+				console.log(this.userMessage);
+				request({
+					method: 'post',
+					url: '/login/user',
+					data: {
+						userinfo: this.userMessage
+					}
+				}).then( (res) => {
+					console.log(res.data);
+					if(res.data == '修改成功') {
+						alert(res.data)
+					}
+				}).catch(() => {
+					console.log('修改失败');
+				})
+			},
 			login() {
 				const self = this;
 				if (self.form.useremail != "" && self.form.userpwd != "") {
@@ -76,12 +108,13 @@ import { request } from "@/network/request.js";  // 网络请求相关
 						}
 					})
 					.then( res => {
-						console.log(res.data)
+						// console.log(res.data)
+						this.userMessage = res.data
 						switch(res.data.result){
 							case '0': 
-								alert("登陆成功！");
-								this.$store.commit('login', res.data.username);
-								this.$router.push('/')
+								alert("登录成功！");
+								this.$store.commit('login', res.data);
+								// this.$router.push('/')
 								break;
 							case '-1':
 								this.emailError = true;
@@ -132,7 +165,7 @@ import { request } from "@/network/request.js";  // 网络请求相关
 	}
 </script>
 
-<style scoped="scoped">
+<style scoped>
 	.login-register{
 		width: 100vw;
 		height: 100vh;
@@ -268,4 +301,52 @@ import { request } from "@/network/request.js";  // 网络请求相关
 		transform: translateX(-100%);
 		transition: all 1s;
 	}
+.user-info-wrapper {
+  width: 100%;
+  height: 500px;
+}
+.user-info-wrapper .user-info {
+  width: 60%;
+  height: 500px;
+  background: linear-gradient(135deg,rgb(210,0,0),rgb(216, 163, 16));
+  margin: 100px auto ;
+  overflow: hidden;
+  border: 2px solid rgb(175, 0, 0);
+  border-radius: 20px;
+  box-shadow: 0 0 3px rgb(175, 0, 0),
+      0 0 6px rgb(175, 0, 0);
+  text-align: center;
+}
+.user-info-wrapper .user-info .user-info-item {
+  width: 45%;
+  float: left;
+  margin: 55px auto;
+  margin-right: 5%;
+}
+.user-info-wrapper .user-info .decoration {
+  display: inline-block;
+  width: 20%;
+  text-align: center;
+}
+.user-info-wrapper .user-info input {
+  width: 80%;
+  height: 30px;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+}
+.user-info-wrapper .btn {
+  width: 20%;
+  height: 40px;
+  border-radius: 24px;
+  border: none;
+  outline: none;
+  background-color: rgb(210,0,0);
+  color: #fff;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+.user-info-wrapper .btn:hover {
+  background-color: rgb(175,0,0);
+}
 </style>

@@ -3,7 +3,7 @@
     <div class="footer-content">
       <ul class="links">
         <li>
-          <a href="">关于房天下</a>
+          <a href="">关于宜居</a>
           <em class="spe-lines">|</em>
         </li>
         <li>

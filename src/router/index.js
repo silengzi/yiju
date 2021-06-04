@@ -11,6 +11,13 @@ const OldHouse = () => import('@/components/content/old_house/old_house.vue')
 const Renovation = () => import('@/components/content/renovation/renovation.vue')
 const RentHouse = () => import('@/components/content/rent_house/rent_house.vue')
 const loginRegister = () => import('@/components/tools/public/loginRegister.vue')
+const rentDetail = () => import('@/components/content/rent_house/rent_detail.vue')
+const oldDetail = () => import('@/components/content/old_house/old_detail.vue')
+const newDetail = () => import('@/components/content/new_house/new_detail.vue')
+const propertyDetail = () => import('@/components/content/new_house/property_detail.vue')
+const sold = () => import('@/components/tools/common/aside/sold.vue')
+const addHouse = () => import('@/components/tools/common/aside/add_house.vue')
+const deleteHouse = () => import('@/components/tools/common/aside/delete_house.vue')
 
 // 1.通过Vue.use(插件)，安装插件
 Vue.use(VueRouter)
@@ -54,6 +61,34 @@ const router = new VueRouter({
         {
             path:'/loginRegister',
             component: loginRegister
+        },
+        {
+            path: '/rent_detail/:id',
+            component: rentDetail
+        },
+        {
+            path: '/old_detail/:id',
+            component: oldDetail
+        },
+        {
+            path: '/new_detail/:id',
+            component: newDetail
+        },
+        {
+            path: '/property_detail/:id',
+            component: propertyDetail
+        },
+        {
+            path: '/sold',
+            component: sold
+        },
+        {
+            path: '/add_house',
+            component: addHouse
+        },
+        {
+            path : '/delete_house',
+            component: deleteHouse
         }
     ],
     mode: 'history'

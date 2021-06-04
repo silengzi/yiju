@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "echarts": "^5.1.1",
     "swiper": "^6.5.7",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^2.6.7",

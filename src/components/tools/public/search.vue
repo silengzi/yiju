@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="search-group">
-      <input class="search" type="text" placeholder="请输入楼盘/商圈/地址等">
+      <input class="search" type="text" placeholder="请输入楼盘/商圈/地址等" v-model="addr" @keyup.enter="search()">
       <span class="search-btn">
-        <button class="btn" type="button"><span class="iconfont icon-sousuo"></span></button>
+        <button class="btn" type="button" @click="search()"><span class="iconfont icon-sousuo"></span></button>
       </span>
     </div>
   </div>
@@ -11,7 +11,21 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      addr: ''
+    }
+  },
+  methods: {
+    search() {
+      this.$router.push({
+        path: '/new_house',
+        query: {
+          addr: this.addr
+        }
+      })
+    }
+  }
 }
 </script>
 

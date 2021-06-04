@@ -9,6 +9,11 @@ var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var bannerRouter = require('./routes/banner');
+var houseRouter = require('./routes/house');
+var detailRouter = require('./routes/details');
+var buyRouter = require('./routes/buy');
+var deleteRouter = require('./routes/delete');
+var historyRouter = require('./routes/history');
 
 var app = express();
 var port = 80;
@@ -38,6 +43,11 @@ app.use('/city', indexRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/banner', bannerRouter);
+app.use('/house', houseRouter);
+app.use('/detail', detailRouter);
+app.use('/buy', buyRouter);
+app.use('/delete', deleteRouter);
+app.use('/history', historyRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

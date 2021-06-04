@@ -32,13 +32,41 @@ router.post('/',(req,res)=>{
 		} else{
 			if (results[0].email == user.email && results[0].password == user.password) {
 				userMessage.username = '' + results[0].username;
+				userMessage.identification = results[0].identification;
+				userMessage.addr = results[0].addr;
+				userMessage.phone = results[0].phone;
+				userMessage.realname = results[0].realname;
+				userMessage.sex = results[0].sex;
+				userMessage.manager = results[0].manager;
 				userMessage.result = '0';	// 0 表示用户存在并且邮箱密码正确
 			} else{
 				userMessage.result = '1';	// 1 表示用户存在，但密码不正确
 			}
 		}
+		/* let arr = [];
+		arr[0] = userMessage */
 		res.send(userMessage);
 	})
+});
+
+router.post('/user', function (req, res, next) {
+  let userinfo = req.body.userinfo;
+	// console.log(userinfo);
+	let u = userinfo.username,
+			r = userinfo.realname,
+			s = userinfo.sex,
+			a = userinfo.addr,
+			i = userinfo.identification,
+			p = userinfo.phone;
+	// console.log(userinfo.username);
+	var userInfoSql = $sql.user.update + "realname = '" + r + "', sex = '" + s + "', addr = '" + a + "', identification = '" + i + "', phone = '" + p + "' where username = '" + u + "'"
+	// console.log(userInfoSql);
+  conn.query(userInfoSql, (error, results) => {
+    if (error) {
+      throw error;
+    }
+  })
+	res.send("修改成功")
 });
 
 module.exports = router;
